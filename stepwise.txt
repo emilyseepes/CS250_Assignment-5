@@ -1,0 +1,212 @@
+//Implement a variant of Hangman
+//* Will need a function prototype that has 15 words from text file
+//** Each word will be read as an array of strings
+//** Must contain 15 words
+
+
+void ReadWords(string words[], int numWords);
+
+//*Game Play will interact with the array of letters to play the game
+//* Prototype will play these 15 words
+
+
+void Play(string words[], int numWords);
+
+//Main Function will execute entire program of Hangman
+//* There are 15 words used in the Hangman game
+//**Program will read through list of 15 words from words.txt
+//**Program will play Hangman using those 15 words
+
+
+int main()
+{
+    int numWords = 15;
+    string words[numWords];
+    ReadWords(words, numWords);
+    Play(words,numWords);
+
+    return 0;
+}
+
+//Program formatting;
+//*For ease of reading, each letter guessed and each letter used will contain a space;
+//** for (int j= 0; j < str.size(); j++){
+//*** read item[j];
+//*** a space is implemented as j = 0;
+//***               }
+//** move to next line
+//* clean up
+
+void PrintWithSpaces(const string& str)
+{
+    for (int j = 0; j < str.size(); j++)
+    {
+        cout << str[j] << " ";
+    }
+    cout << endl;
+}
+
+
+//Execute rounds of Hangman;
+//* Starts with 5 lives;
+//** for each round of guessing a letter {
+//*** program checks to verify that lives < 0;
+//***               }
+//** if (lives > 0){
+//** game play will continue;
+//**                }
+//** if (lives == 0){
+//** game play will stop;
+//** prints message of losing;
+//** program breaks;
+//**                }
+//*** for each correct letter guessed {
+//*** lives++;
+//***               }
+//**** for each round of guessing a letter in the word {
+//**** lifeLost is TRUE;
+//****              }
+//***** if (lifeLost is FALSE) {
+//***** no lives were lost;
+//*****             }
+//*** for each incorrect letter guessed {
+//*** lives--;
+//***               }
+//**** for each round of guessing a letter in the word{
+//**** lifeLost is TRUE;
+//****              }
+//***** if lifeLost is TRUE {
+//***** one life is lost;
+//*****             }
+//* Starts with first word from words.txt;
+//** for (int i = 0; i < numWords && lives > 0; i++){
+//** word is selected and hidden from player;
+//*** determines size of word selected;
+//**** creates corresponding number of spaces for word;
+//**** creates corresponding number of lines for word;
+//**** creates string of letters used;
+//*** prints status;
+//**** while (game == true) {
+//***** print guess;
+//***** print lines;
+//***** print lives;
+//***** print letters guessed;
+//**** request user input to guess letters;
+//***** update game status;
+//****** user input is added to used letters;
+//******for (int j = 0; j < hiddenWord.size(); j++){
+//****** compare hiddenword's letters to input;
+//****** if hiddenWord[j] matches input {
+//******* guessWord[j]== input and is displayed;
+//******}
+//*****}
+//**** if (hiddenWord == guessWord){
+//***** game is won;
+//***** prints winning statement;
+//***** round breaks and next word is selected;
+//****}
+//***}
+//**}
+//* clean up;
+
+
+void Play(string words[], int numWords)
+{
+
+    int lives = 5;
+    cout << endl;
+
+    for(int i=0; i < numWords && lives > 0; i++)
+    {
+        string& hiddenWord = words[i];
+        string guessWord(hiddenWord.size(), ' ');
+        string underline(hiddenWord.size(), '-');
+        string lettersUsed;
+
+
+        while (true)
+        {
+            //print status (guess lives and letters used)
+            PrintWithSpaces(guessWord);
+            PrintWithSpaces(underline);
+            cout << "Lives: " << lives << endl;
+            cout << "Letters Used: ";
+            PrintWithSpaces(lettersUsed);
+
+            //get input character
+            cout << "Enter Letter: ";
+            char input;
+            cin >> input;
+            cout << endl;
+
+            //update game state
+            lettersUsed.push_back(input); //keeps track and adds to list of letters used
+            bool lostLife = true;
+            for (int j = 0; j < hiddenWord.size(); j++)
+            {
+                if (hiddenWord[j] == input)
+                {
+                    lostLife = false;
+                    guessWord[j] = input;
+                }
+
+            }
+
+            if(hiddenWord == guessWord)
+            {
+                cout << "You win! Next word." << endl;
+                break;
+            }
+
+            if (lostLife)
+            {
+                lives--;
+            }
+            else
+            {
+                lives++;
+            }
+
+            if (lives == 0)
+            {
+                cout << "You lose!" << endl;
+                break;
+            }
+        }
+    }
+}
+
+
+//Open file containing 15 words used in Hangman;
+//* If file is not found {
+//** print 'could not open file';
+//*                }
+//* If file is found {
+//* Initialize "words.txt" data;
+//**    read words;
+//***   for each line of words.txt {
+//***   read data;
+//***   continue to read next line until bottom of list
+//** close file when finished;
+//*             }
+//* cleanup;
+
+void ReadWords(string words[], int numWords){
+    ifstream infile;
+    infile.open("words.txt");
+    if(!infile)
+        cout<<"Could not open file"<<endl;
+    else{
+        for(int i=0; i<numWords; i++)
+            infile>>words[i];
+    }
+    infile.close();
+
+
+//Escape
+    void PressKeyToContinue()
+{
+    string x;
+    cout<<"Press any key to continue:";
+    cin>>x;
+}
